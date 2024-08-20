@@ -1,0 +1,27 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: hng-runnerdeploy
+spec:
+  replicas: 1
+  template:
+    spec:
+      organization: "hayzed-org"
+      labels:
+        - self-hosted
+        - linux
+        - x64
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: hng-runner-autoscaler
+spec:
+  scaleTargetRef:
+    name: example-runnerdeploy
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+    repositoryNames:
+    - hayzed-org/boilerplate_golang_web
